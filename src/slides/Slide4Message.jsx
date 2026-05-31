@@ -4,11 +4,11 @@ const PARAS = [
   { delay:0.4,
     text: 'God has been so good to you and it shows in the way you live. You grew up to be someone with a genuinely good heart. Someone who loves her family, who respects her parents, who always tries to do what is right. That is God working in your life and you letting Him.' },
   { delay:0.8, gold:true,
-    text: "It is an achievement alone to get where you are right now. Being around you is a blessing. I am lucky to be with you on this milestone. Enjoy your day and make it the best. Reaching 30 years is not easy and I know your young self is so proud of where you are right now." },
+    text: "It is an achievement alone to get where you are right now. Being around you is a blessing, I'm lucky to be with you on this milestone. Enjoy your day and make it the best. Reaching 30 years is not easy and I know your young self is so proud of where you are right now." },
   { delay:1.2,
-    text: 'Today we celebrate everything you are and everything God is still going to do in your life. Thirty is not the end of something. It is the beginning of so much more. Marami pang darating na blessings para sayo.' },
-  { delay:1.6, gold:true,
-    text: 'This is a day to celebrate 30 years of living! Happy 30th Birthday, Maris. Mahal na mahal kita. 💛' },
+    text: 'Today we celebrate everything you are and everything God is still going to do in your life. Thirty is not the end of something. It is the beginning of so much more. Marami pang darating na blessings para sayo' },
+  { delay:1.6,
+    text: 'This is a day to celebrate 30years of living!' },
 ]
 
 export default function Slide4Message() {
@@ -123,21 +123,6 @@ export default function Slide4Message() {
           </motion.p>
         ))}
 
-        <motion.p
-          initial={{ opacity:0 }}
-          animate={{ opacity:1 }}
-          transition={{ delay:2.5 }}
-          style={{
-            marginTop:'clamp(18px,3vh,28px)',
-            fontSize:'clamp(14px,1.8vw,18px)',
-            color:'#FF6B9D',
-            fontStyle:'italic',
-            textAlign:'right',
-            position:'relative', zIndex:1,
-          }}
-        >
-          With all of our love 🥂
-        </motion.p>
       </motion.div>
     </div>
   )

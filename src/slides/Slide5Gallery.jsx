@@ -42,7 +42,7 @@ const SLOTS = [
   { src:'/pics/IMG_9978.jpg',  label:'Happy 30th Birthday 🎉' },
 ]
 
-const DURATION = 4500
+const DURATION = 1500
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`
 
@@ -52,10 +52,10 @@ function FilmCaption({ text, idx }) {
     <AnimatePresence mode="wait">
       <motion.div
         key={idx}
-        initial={{ opacity:0, y:8 }}
+        initial={{ opacity:0, y:6 }}
         animate={{ opacity:1, y:0 }}
         exit={{ opacity:0 }}
-        transition={{ duration:0.4 }}
+        transition={{ duration:0.25 }}
         style={{
           color:'rgba(255,255,255,0.92)',
           fontFamily:"'Playfair Display',serif",
@@ -68,7 +68,7 @@ function FilmCaption({ text, idx }) {
       >
         {words.map((word, i) => (
           <motion.span key={i} initial={{ opacity:0 }} animate={{ opacity:1 }}
-            transition={{ delay: 0.3 + i * 0.07, duration:0.25 }}
+            transition={{ delay: 0.05 + i * 0.04, duration:0.18 }}
           >
             {word}{i < words.length - 1 ? ' ' : ''}
           </motion.span>
@@ -78,47 +78,67 @@ function FilmCaption({ text, idx }) {
   )
 }
 
+const arrowBtn = {
+  position:'absolute',
+  top:'50%',
+  transform:'translateY(-50%)',
+  width:36, height:36, borderRadius:'50%',
+  background:'rgba(0,0,0,0.45)',
+  backdropFilter:'blur(8px)',
+  border:'1px solid rgba(255,255,255,0.18)',
+  color:'rgba(255,255,255,0.85)',
+  fontSize:20,
+  display:'flex', alignItems:'center', justifyContent:'center',
+  cursor:'pointer',
+  zIndex:9,
+  userSelect:'none',
+  WebkitUserSelect:'none',
+}
+
 export default function Slide5Gallery({ goNext }) {
-  const [idx,    setIdx]    = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [idx,  setIdx]  = useState(0)
+  const [held, setHeld] = useState(false)
   const total = SLOTS.length
 
   const goTo = useCallback(n => setIdx(((n % total) + total) % total), [total])
 
+  // Auto-advance — pauses while holding
   useEffect(() => {
-    if (paused) return
+    if (held) return
     const t = setTimeout(() => setIdx(i => (i + 1) % total), DURATION)
     return () => clearTimeout(t)
-  }, [idx, paused, total])
+  }, [idx, held, total])
+
+  // Hold-to-pause handlers for the background
+  const holdStart = () => setHeld(true)
+  const holdEnd   = () => setHeld(false)
+
+  // Arrow buttons stop the hold event from reaching the background
+  const arrowDown = e => e.stopPropagation()
 
   return (
-    <div style={{
-      width:'100%', height:'100%',
-      background:'#000',
-      overflow:'hidden',
-      position:'relative',
-    }}>
+    <div
+      style={{ width:'100%', height:'100%', background:'#000', overflow:'hidden', position:'relative' }}
+      onPointerDown={holdStart}
+      onPointerUp={holdEnd}
+      onPointerLeave={holdEnd}
+      onPointerCancel={holdEnd}
+    >
 
-      {/* ── PHOTO — fills the entire screen ── */}
+      {/* ── PHOTO ── */}
       <AnimatePresence initial={false}>
         <motion.div
           key={idx}
           initial={{ opacity:0 }}
           animate={{ opacity:1 }}
           exit={{ opacity:0 }}
-          transition={{ duration:0.8, ease:'easeInOut' }}
+          transition={{ duration:0.4, ease:'easeInOut' }}
           style={{ position:'absolute', inset:0 }}
         >
           <img
             src={SLOTS[idx].src}
             alt={SLOTS[idx].label}
-            style={{
-              width:'100%',
-              height:'100%',
-              objectFit:'contain',
-              objectPosition:'center',
-              display:'block',
-            }}
+            style={{ width:'100%', height:'100%', objectFit:'contain', objectPosition:'center', display:'block' }}
           />
         </motion.div>
       </AnimatePresence>
@@ -130,21 +150,21 @@ export default function Slide5Gallery({ goNext }) {
         opacity:0.05, mixBlendMode:'overlay',
       }} />
 
-      {/* Top gradient fade */}
+      {/* Top gradient */}
       <div style={{
         position:'absolute', top:0, left:0, right:0, zIndex:5, pointerEvents:'none',
         height:'clamp(70px,14vh,110px)',
         background:'linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, transparent 100%)',
       }} />
 
-      {/* Bottom gradient fade */}
+      {/* Bottom gradient */}
       <div style={{
         position:'absolute', bottom:0, left:0, right:0, zIndex:5, pointerEvents:'none',
         height:'clamp(110px,22vh,170px)',
         background:'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%)',
       }} />
 
-      {/* ── TOP BAR — overlaid ── */}
+      {/* ── TOP BAR ── */}
       <div style={{
         position:'absolute', top:0, left:0, right:0, zIndex:8,
         display:'flex', alignItems:'center', justifyContent:'center',
@@ -158,7 +178,6 @@ export default function Slide5Gallery({ goNext }) {
           letterSpacing:'5px',
           textTransform:'uppercase',
         }}>Memory Lane</span>
-
         <span style={{
           position:'absolute', right:16,
           color:'rgba(255,255,255,0.3)',
@@ -170,7 +189,7 @@ export default function Slide5Gallery({ goNext }) {
         </span>
       </div>
 
-      {/* ── BOTTOM BAR — overlaid ── */}
+      {/* ── BOTTOM BAR ── */}
       <div style={{
         position:'absolute', bottom:0, left:0, right:0, zIndex:8,
         display:'flex', flexDirection:'column',
@@ -179,11 +198,8 @@ export default function Slide5Gallery({ goNext }) {
         padding:'0 clamp(16px,5vw,48px) clamp(14px,2.5vh,22px)',
       }}>
         {/* Progress bar */}
-        <div style={{
-          position:'absolute', top:0, left:0, right:0, height:2,
-          background:'rgba(255,255,255,0.12)',
-        }}>
-          {!paused && (
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'rgba(255,255,255,0.12)' }}>
+          {!held && (
             <motion.div
               key={`bar-${idx}`}
               initial={{ width:'0%' }}
@@ -194,25 +210,30 @@ export default function Slide5Gallery({ goNext }) {
           )}
         </div>
 
-        {/* Caption sits clearly above the dots */}
         <div style={{ paddingBottom:4 }}>
           <FilmCaption text={SLOTS[idx].label} idx={idx} />
         </div>
 
-        {/* Dot strip + next-slide button on same row */}
+        {/* Dots + next-slide button */}
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <div style={{ display:'flex', gap:4, alignItems:'center', flexWrap:'nowrap', overflow:'hidden', maxWidth:'70vw' }}>
             {SLOTS.map((_, i) => (
-              <button key={i} onClick={e => { e.stopPropagation(); goTo(i) }} style={{
-                width: i === idx ? 18 : 4, height:4, borderRadius:3,
-                background: i === idx ? '#FFD700' : 'rgba(255,255,255,0.25)',
-                border:'none', cursor:'pointer', padding:0,
-                transition:'all 0.3s ease', flexShrink:0,
-              }} />
+              <button
+                key={i}
+                onPointerDown={arrowDown}
+                onClick={e => { e.stopPropagation(); goTo(i) }}
+                style={{
+                  width: i === idx ? 18 : 4, height:4, borderRadius:3,
+                  background: i === idx ? '#FFD700' : 'rgba(255,255,255,0.25)',
+                  border:'none', cursor:'pointer', padding:0,
+                  transition:'all 0.3s ease', flexShrink:0,
+                }}
+              />
             ))}
           </div>
           {goNext && (
             <button
+              onPointerDown={arrowDown}
               onClick={e => { e.stopPropagation(); goNext() }}
               style={{
                 flexShrink:0,
@@ -235,9 +256,9 @@ export default function Slide5Gallery({ goNext }) {
         </div>
       </div>
 
-      {/* Pause icon */}
+      {/* Pause overlay */}
       <AnimatePresence>
-        {paused && (
+        {held && (
           <motion.div
             initial={{ opacity:0, scale:0.75 }}
             animate={{ opacity:1, scale:1 }}
@@ -255,16 +276,22 @@ export default function Slide5Gallery({ goNext }) {
         )}
       </AnimatePresence>
 
-      {/* Tap zones */}
-      <div onClick={e => { e.stopPropagation(); goTo(idx - 1) }}
-        style={{ position:'absolute', left:0, top:0, width:'22%', height:'100%',
-                 cursor:'w-resize', zIndex:7 }} />
-      <div onClick={() => setPaused(p => !p)}
-        style={{ position:'absolute', left:'22%', top:0, width:'56%', height:'100%',
-                 cursor:'pointer', zIndex:7 }} />
-      <div onClick={e => { e.stopPropagation(); goTo(idx + 1) }}
-        style={{ position:'absolute', right:0, top:0, width:'22%', height:'100%',
-                 cursor:'e-resize', zIndex:7 }} />
+      {/* ← arrow */}
+      <motion.button
+        whileTap={{ scale:0.85 }}
+        onPointerDown={arrowDown}
+        onClick={e => { e.stopPropagation(); goTo(idx - 1) }}
+        style={{ ...arrowBtn, left:12 }}
+      >‹</motion.button>
+
+      {/* → arrow */}
+      <motion.button
+        whileTap={{ scale:0.85 }}
+        onPointerDown={arrowDown}
+        onClick={e => { e.stopPropagation(); goTo(idx + 1) }}
+        style={{ ...arrowBtn, right:12 }}
+      >›</motion.button>
+
     </div>
   )
 }
