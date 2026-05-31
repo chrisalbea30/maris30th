@@ -41,11 +41,21 @@ const variants = {
   }),
 }
 
+// Slides that have their own internal navigation (gallery / video)
+const FULLSCREEN_SLIDES = new Set([4, 5])
+
 export default function SlideShow() {
   const [[idx, dir], setSlide] = useState([0, 1])
   const cooldown   = useRef(false)
   const touchX     = useRef(null)
   const touchY     = useRef(null)
+  const [wide, setWide] = useState(() => window.innerWidth > 768)
+
+  useEffect(() => {
+    const fn = () => setWide(window.innerWidth > 768)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
 
   const go = useCallback((next) => {
     if (cooldown.current) return
@@ -121,10 +131,12 @@ export default function SlideShow() {
         </motion.div>
       </AnimatePresence>
 
-      <NavDots total={SLIDES.length} current={idx} onDotClick={go} />
+      {!FULLSCREEN_SLIDES.has(idx) && (
+        <NavDots total={SLIDES.length} current={idx} onDotClick={go} />
+      )}
 
-      {/* Side arrows — desktop only */}
-      {idx > 0 && (
+      {/* Side arrows — desktop only, hidden on gallery/video slides */}
+      {wide && !FULLSCREEN_SLIDES.has(idx) && idx > 0 && (
         <motion.button
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           whileHover={{ scale: 1.15, background: 'rgba(255,255,255,0.16)' }}
@@ -141,7 +153,7 @@ export default function SlideShow() {
           }}
         >←</motion.button>
       )}
-      {idx < SLIDES.length - 1 && (
+      {wide && !FULLSCREEN_SLIDES.has(idx) && idx < SLIDES.length - 1 && (
         <motion.button
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           whileHover={{ scale: 1.15, background: 'rgba(255,255,255,0.16)' }}

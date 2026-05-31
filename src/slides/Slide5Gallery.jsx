@@ -78,7 +78,7 @@ function FilmCaption({ text, idx }) {
   )
 }
 
-export default function Slide5Gallery() {
+export default function Slide5Gallery({ goNext }) {
   const [idx,    setIdx]    = useState(0)
   const [paused, setPaused] = useState(false)
   const total = SLOTS.length
@@ -115,7 +115,7 @@ export default function Slide5Gallery() {
             style={{
               width:'100%',
               height:'100%',
-              objectFit:'cover',
+              objectFit:'contain',
               objectPosition:'center',
               display:'block',
             }}
@@ -175,8 +175,8 @@ export default function Slide5Gallery() {
         position:'absolute', bottom:0, left:0, right:0, zIndex:8,
         display:'flex', flexDirection:'column',
         alignItems:'center', justifyContent:'flex-end',
-        gap:'clamp(6px,1.2vh,10px)',
-        padding:'0 clamp(16px,5vw,60px) clamp(16px,3vh,28px)',
+        gap:6,
+        padding:'0 clamp(16px,5vw,48px) clamp(14px,2.5vh,22px)',
       }}>
         {/* Progress bar */}
         <div style={{
@@ -194,18 +194,44 @@ export default function Slide5Gallery() {
           )}
         </div>
 
-        <FilmCaption text={SLOTS[idx].label} idx={idx} />
+        {/* Caption sits clearly above the dots */}
+        <div style={{ paddingBottom:4 }}>
+          <FilmCaption text={SLOTS[idx].label} idx={idx} />
+        </div>
 
-        {/* Dot strip */}
-        <div style={{ display:'flex', gap:5, alignItems:'center' }}>
-          {SLOTS.map((_, i) => (
-            <button key={i} onClick={e => { e.stopPropagation(); goTo(i) }} style={{
-              width: i === idx ? 20 : 5, height:5, borderRadius:3,
-              background: i === idx ? '#FFD700' : 'rgba(255,255,255,0.25)',
-              border:'none', cursor:'pointer', padding:0,
-              transition:'all 0.3s ease', flexShrink:0,
-            }} />
-          ))}
+        {/* Dot strip + next-slide button on same row */}
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <div style={{ display:'flex', gap:4, alignItems:'center', flexWrap:'nowrap', overflow:'hidden', maxWidth:'70vw' }}>
+            {SLOTS.map((_, i) => (
+              <button key={i} onClick={e => { e.stopPropagation(); goTo(i) }} style={{
+                width: i === idx ? 18 : 4, height:4, borderRadius:3,
+                background: i === idx ? '#FFD700' : 'rgba(255,255,255,0.25)',
+                border:'none', cursor:'pointer', padding:0,
+                transition:'all 0.3s ease', flexShrink:0,
+              }} />
+            ))}
+          </div>
+          {goNext && (
+            <button
+              onClick={e => { e.stopPropagation(); goNext() }}
+              style={{
+                flexShrink:0,
+                background:'rgba(255,255,255,0.1)',
+                border:'1px solid rgba(255,255,255,0.22)',
+                borderRadius:20,
+                padding:'4px 10px',
+                color:'rgba(255,255,255,0.7)',
+                fontSize:10,
+                letterSpacing:'2px',
+                textTransform:'uppercase',
+                cursor:'pointer',
+                fontFamily:"'Inter',sans-serif",
+                whiteSpace:'nowrap',
+              }}
+            >
+              Next →
+            </button>
+          )}
         </div>
       </div>
 

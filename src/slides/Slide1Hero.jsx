@@ -167,35 +167,6 @@ export default function Slide1Hero({ goNext }) {
         </motion.p>
       </div>
 
-      {/* Begin button */}
-      <motion.button
-        initial={{ opacity:0, y:20 }}
-        animate={{ opacity:1, y:0 }}
-        transition={{ delay:2.8, duration:0.8 }}
-        onClick={goNext}
-        whileHover={{ scale:1.07, boxShadow:'0 0 30px rgba(255,215,0,0.3)' }}
-        whileTap={{ scale:0.93 }}
-        style={{
-          position:'absolute',
-          bottom:50,
-          left:'50%',
-          transform:'translateX(-50%)',
-          background:'rgba(255,255,255,0.07)',
-          border:'1px solid rgba(255,255,255,0.2)',
-          borderRadius:50,
-          padding:'13px 34px',
-          color:'white',
-          fontSize:'clamp(12px,1.8vw,15px)',
-          letterSpacing:'4px',
-          textTransform:'uppercase',
-          cursor:'pointer',
-          backdropFilter:'blur(12px)',
-          fontFamily:"'Inter',sans-serif",
-          zIndex:5,
-        }}
-      >
-        Begin →
-      </motion.button>
     </div>
   )
 }
