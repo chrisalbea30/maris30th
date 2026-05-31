@@ -2,15 +2,13 @@ import { motion } from 'framer-motion'
 
 const PARAS = [
   { delay:0.4,
-    text: '30 na, Maris! Grabe, ang bilis naman ng panahon. But look at you now. You look so beautiful, inside and out, and that never changes talaga.' },
-  { delay:0.8,
-    text: 'God has been so good to you and it shows in the way you live. You grew up to be someone with a genuinely good heart. Someone who loves her family, who respects her elders, who always tries to do what is right. Hindi yan natututo sa school. That is God working in your life and you letting Him.' },
-  { delay:1.2, gold:true,
-    text: 'Being around you is a blessing, Maris. You make people feel cared for without even trying. That is rare and that is you.' },
-  { delay:1.6,
-    text: 'Today we celebrate everything you are and everything God is still going to do in your life. Thirty is not the end of something. It is the beginning of so much more. Marami pa tayong darating na blessings para sayo.' },
-  { delay:2.0, gold:true,
-    text: 'Happy 30th Birthday, Maris. Mahal na mahal ka namin. 💛' },
+    text: 'God has been so good to you and it shows in the way you live. You grew up to be someone with a genuinely good heart. Someone who loves her family, who respects her parents, who always tries to do what is right. That is God working in your life and you letting Him.' },
+  { delay:0.8, gold:true,
+    text: "It is an achievement alone to get where you are right now. Being around you is a blessing. I am lucky to be with you on this milestone. Enjoy your day and make it the best. Reaching 30 years is not easy and I know your young self is so proud of where you are right now." },
+  { delay:1.2,
+    text: 'Today we celebrate everything you are and everything God is still going to do in your life. Thirty is not the end of something. It is the beginning of so much more. Marami pang darating na blessings para sayo.' },
+  { delay:1.6, gold:true,
+    text: 'This is a day to celebrate 30 years of living! Happy 30th Birthday, Maris. Mahal na mahal kita. 💛' },
 ]
 
 export default function Slide4Message() {
@@ -31,8 +29,27 @@ export default function Slide4Message() {
           flexShrink:0,
         }}
       >
-        A Note From the Heart 💌
+        Happy Birthday Love 💌
       </motion.h2>
+
+      <motion.p
+        initial={{ opacity:0 }}
+        animate={{ opacity:1 }}
+        transition={{ delay:0.15, duration:0.7 }}
+        style={{
+          fontSize:'clamp(11px,1.5vw,14px)',
+          color:'rgba(255,215,0,0.55)',
+          textAlign:'center',
+          letterSpacing:'4px',
+          textTransform:'uppercase',
+          fontFamily:"'Inter',sans-serif",
+          marginTop:'-clamp(10px,1.5vh,16px)',
+          marginBottom:'clamp(12px,2vh,20px)',
+          flexShrink:0,
+        }}
+      >
+        3 Decades &amp; 30 Years
+      </motion.p>
 
       <motion.div
         initial={{ opacity:0, y:50 }}
